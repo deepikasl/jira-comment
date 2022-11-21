@@ -1,0 +1,71 @@
+valuesFilePath: ./values.yml
+
+resources:
+  - name: jira_comment_task_git_repo
+    type: GitRepo
+    configuration:
+      path: {{ .Values.repoPath }}
+      gitProvider: {{ .Values.gitIntegration }}
+      branches:
+        include: ^{{ .Values.mainBranch }}$
+      cloneProtocol: https
+      
+pipelines:
+  - name: jira_comment_task_publish
+    configuration:
+      jfrogCliVersion: 2
+      runtime:
+        type: image
+        image:
+          custom:
+            name: releases-docker.jfrog.io/jfrog/pipelines-u18node
+            tag: "16"
+            autoPull: true
+      environmentVariables:
+        readOnly:
+          TASK_NAME: jira-comment
+          TASK_VERSION: 0.0.${run_number}
+          TASK_REPOSITORY: pipelines-tasks-local
+          RESOLVE_REPO: npm-virtual
+          JIRA_INT: deepikajira
+    steps:
+      - name: build_and_publish_task
+        type: Bash
+        configuration:
+          inputResources:
+            - name: jira_comment_task_git_repo
+              trigger: false
+          integrations:
+            - name: {{ .Values.artIntegration }}
+        execution:
+          onExecute:
+            - pushd $res_jira_comment_task_git_repo_resourcePath/tasks/$TASK_NAME/src
+            - jfrog npmc --repo-resolve $RESOLVE_REPO
+            - jfrog npm install
+            - popd
+            - task: jfrog/publish-task@v0.0.1
+              id: publish-hello-world
+              input:
+                path: $res_jira_comment_task_git_repo_resourcePath
+                rtRepository: $TASK_REPOSITORY
+                taskName: $TASK_NAME
+                version: $TASK_VERSION
+
+      - name: test_published_jira_comment_task
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: build_and_publish_task
+          integrations:
+            - name: {{ .Values.artIntegration }}
+            - name: deepikajira
+        execution:
+          onExecute:
+            # Run task
+            - task: $TASK_NAME@v$TASK_VERSION
+              input:
+                issue_key: "TAS-1"
+                username: "$int_deepikajira_username"
+                token: "$int_deepikajira_token"
+                endpoint: "$int_deepikajira_url"
+                comment: "Test comment, run number: $run_number and step url is: $step_url"
