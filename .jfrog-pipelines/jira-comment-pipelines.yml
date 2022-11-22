@@ -39,7 +39,7 @@ pipelines:
             - name: {{ .Values.artIntegration }}
         execution:
           onExecute:
-            - pushd $res_jira_comment_task_git_repo_resourcePath/src
+            - pushd $res_jira_comment_task_git_repo_resourcePath
             - jfrog npmc --repo-resolve $RESOLVE_REPO
             - jfrog npm install
             - popd
