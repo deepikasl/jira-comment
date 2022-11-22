@@ -11,7 +11,7 @@ resources:
       cloneProtocol: https
       
 pipelines:
-  - name: jira_comment_task_publish
+  - name: jira_comment_task_publish_pipeline
     configuration:
       jfrogCliVersion: 2
       runtime:
