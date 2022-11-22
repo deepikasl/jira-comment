@@ -26,7 +26,7 @@ async function jira_comment() {
     },
     url: endpoint + '/rest/api/2/issue/' + issue_key + '/comment'
   };
-  await axios(options);
+  return await axios(options);
 }
 
 module.exports = jira_comment;
