@@ -94,5 +94,5 @@ pipelines:
             - task: $TASK_NAME@v$TASK_VERSION
               input:
                 issue_key: "TAS-1"
-                jira_integration_name: "deepikajira"
+                jira_integration_name: deepikajira
                 comment: "Test comment, run number: $run_number and step url is: $step_url"
