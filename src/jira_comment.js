@@ -21,7 +21,8 @@ async function jira_comment() {
   }
 
   const jira_integration = tasks.getIntegration(jira_integration_name);
-
+console.log('*********jira_integration',jira_integration);
+console.log('*************getIntegration', tasks.getIntegration('deepikajira'));
   const username = jira_integration.username;
   let endpoint = jira_integration.endpoint;
   const token = jira_integration.token;
