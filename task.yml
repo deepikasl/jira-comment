@@ -1,6 +1,6 @@
 name: jira-comment
 description: Comments on the given Jira ticket
-source: github.com/deepikasl/jenkins-comment
+source: github.com/deepikasl/jira-comment
 labels:
   - jira
   - comment
