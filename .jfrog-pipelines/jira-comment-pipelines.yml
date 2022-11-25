@@ -68,17 +68,6 @@ pipelines:
                 targetRepository: $TASK_REPOSITORY
                 taskName: $TASK_NAME
                 taskVersion: $TASK_VERSION
-            # - pushd $res_jira_comment_task_git_repo_resourcePath
-            # - jfrog npmc --repo-resolve $RESOLVE_REPO
-            # - jfrog npm install
-            # - popd
-            # - task: jfrog/publish-task@v0.0.1
-            #   id: publish-hello-world
-            #   input:
-            #     path: $res_jira_comment_task_git_repo_resourcePath
-            #     rtRepository: $TASK_REPOSITORY
-            #     taskName: $TASK_NAME
-            #     version: $TASK_VERSION
 
       - name: test_published_jira_comment_task
         type: Bash
