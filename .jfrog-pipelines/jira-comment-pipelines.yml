@@ -39,17 +39,46 @@ pipelines:
             - name: {{ .Values.artIntegration }}
         execution:
           onExecute:
+            - test -n "$TASK_VERSION" -a "$TASK_VERSION" != "0.0.0"
+
             - pushd $res_jira_comment_task_git_repo_resourcePath
+            # Configure JFrog CLI
             - jfrog npmc --repo-resolve $RESOLVE_REPO
+            # Install npm dependencies
             - jfrog npm install
+            # Build task runnable script bundled with dependencies
+            - npm run dist
             - popd
+
+            # Create task package content
+            - mkdir $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
+            # Copy task.yml
+            - cp $res_jira_comment_task_git_repo_resourcePath/task.yml $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
+            # Copy README.md
+            - cp $res_jira_comment_task_git_repo_resourcePath/README.md $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
+            # Copy dist folder
+            - cp -r $res_jira_comment_task_git_repo_resourcePath/dist $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
+            - echo "Task content" && ls -la $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
+
+            # Run publish task
             - task: jfrog/publish-task@v0.0.1
-              id: publish-hello-world
+              id: publish-jira-comment
               input:
-                path: $res_jira_comment_task_git_repo_resourcePath
+                path: $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
                 rtRepository: $TASK_REPOSITORY
                 taskName: $TASK_NAME
                 version: $TASK_VERSION
+            # - pushd $res_jira_comment_task_git_repo_resourcePath
+            # - jfrog npmc --repo-resolve $RESOLVE_REPO
+            # - jfrog npm install
+            # - popd
+            # - task: jfrog/publish-task@v0.0.1
+            #   id: publish-hello-world
+            #   input:
+            #     path: $res_jira_comment_task_git_repo_resourcePath
+            #     rtRepository: $TASK_REPOSITORY
+            #     taskName: $TASK_NAME
+            #     version: $TASK_VERSION
 
       - name: test_published_jira_comment_task
         type: Bash
