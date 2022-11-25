@@ -61,7 +61,7 @@ pipelines:
             - echo "Task content" && ls -la $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
 
             # Run publish task
-            - task: jfrog/publish-task@v0.0.1
+            - task: jfrog/publish-task@v0.0.2
               id: publish-jira-comment
               input:
                 path: $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
