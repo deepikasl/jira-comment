@@ -65,9 +65,9 @@ pipelines:
               id: publish-jira-comment
               input:
                 path: $JFROG_STEP_WORKSPACE_DIR/$TASK_NAME
-                rtRepository: $TASK_REPOSITORY
+                targetRepository: $TASK_REPOSITORY
                 taskName: $TASK_NAME
-                version: $TASK_VERSION
+                taskVersion: $TASK_VERSION
             # - pushd $res_jira_comment_task_git_repo_resourcePath
             # - jfrog npmc --repo-resolve $RESOLVE_REPO
             # - jfrog npm install
