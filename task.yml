@@ -7,12 +7,8 @@ labels:
 input:
   - name: issue_key
     description: key of the jira issue where you want to add a comment
-  - name: endpoint
-    description: url of the jira
-  - name: username
-    description: username of the jira
-  - name: token
-    description: token
+  - name: jira_integration_name
+    description: integration name of your Jira
   - name: comment
     description: comment which you want to add in ticket
 execution:

@@ -3,10 +3,28 @@ const axios = require('axios');
 
 async function jira_comment() {
   const issue_key = tasks.getInput('issue_key');
-  let endpoint = tasks.getInput('endpoint');
-  const username = tasks.getInput('username');
-  const token = tasks.getInput('token');
+  if (issue_key == "") {
+    tasks.error("issue_key input cannot be empty");
+    return process.exit(1);
+  }
+
+  const jira_integration_name = tasks.getInput('jira_integration_name');
+  if (jira_integration_name == "") {
+    tasks.error("jira_integration_name input cannot be empty");
+    return process.exit(1);
+  }
+
   const comment = tasks.getInput('comment');
+  if (comment == "") {
+    tasks.error("comment input cannot be empty");
+    return process.exit(1);
+  }
+
+  const jira_integration = tasks.getIntegration(jira_integration_name);
+
+  const username = jira_integration.username;
+  let endpoint = jira_integration.endpoint;
+  const token = jira_integration.token;
   const apiSuffix = "/rest/api/2";
 
   endpoint = endpoint.replace(/^\/|\/$/g, ''); // removes trailing slash
