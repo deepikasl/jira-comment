@@ -12,4 +12,4 @@ input:
   - name: comment
     description: comment which you want to add in ticket
 execution:
-  - node16 dist/index.js main
+  - node16 dist/index.js
